@@ -15,10 +15,12 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '', 
-  database: 'db_coffee'
+  host: process.env.DB_HOST || 'mysql-32f49de5-fahdimas.d.aivencloud.com',
+  port: process.env.DB_PORT || 28308,
+  user: process.env.DB_USER || 'avnadmin',
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME || 'defaultdb',
+  ssl: { rejectUnauthorized: false }
 });
 
 db.connect((err) => {
@@ -78,7 +80,7 @@ app.get('/api/menus', (req, res) => {
 app.post('/api/menus', upload.single('gambar'), (req, res) => {
   const { nama_kopi, deskripsi, harga, stok } = req.body;
   // Jika ada file yang diupload, buat URL-nya. Jika tidak, kosongkan.
-  const gambarUrl = req.file ? `http://localhost:5000/uploads/${req.file.filename}` : '';
+  const gambarUrl = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` : '';
   
   const query = 'INSERT INTO menus (nama_kopi, deskripsi, harga, stok, gambar) VALUES (?, ?, ?, ?, ?)';
   db.query(query, [nama_kopi, deskripsi, harga, stok || 999, gambarUrl], (err, result) => {
@@ -96,7 +98,7 @@ app.put('/api/menus/:id', upload.single('gambar'), (req, res) => {
 
   // Jika kasir mengupload gambar baru saat Edit
   if (req.file) {
-    const gambarUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+    const gambarUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
     query = 'UPDATE menus SET nama_kopi = ?, deskripsi = ?, harga = ?, gambar = ? WHERE id = ?';
     values = [nama_kopi, deskripsi, harga, gambarUrl, id];
   }
@@ -138,4 +140,5 @@ app.put('/api/orders/:id', (req, res) => {
   });
 });
 
-app.listen(5000, () => console.log('Server berjalan di http://localhost:5000'));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server berjalan di port ${PORT}`));
