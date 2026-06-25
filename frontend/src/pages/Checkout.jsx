@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import API_URL from '../api'; 
 
 export default function Checkout() {
   const [cart, setCart] = useState([]);
@@ -32,7 +33,7 @@ export default function Checkout() {
     if (uangDibayar < totalHarga) return alert("Uang pembayaran kurang dari total tagihan!");
 
     try {
-      await axios.post("http://127.0.0.1:5000/api/orders", {
+      await axios.post(`${API_URL}/api/orders`, {
         nama_pelanggan: namaPelanggan,
         detail_pesanan: buatDetailPesanan(),
         total_harga: totalHarga,

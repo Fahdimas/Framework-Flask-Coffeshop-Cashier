@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import API_URL from '../api';
 
 export default function AdminMenu() {
   const [orders, setOrders] = useState([]);
@@ -16,14 +17,14 @@ export default function AdminMenu() {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:5000/api/orders");
+      const res = await axios.get("${API_URL}/api/orders");
       setOrders(res.data);
     } catch (error) { console.error(error); }
   };
 
   const fetchMenus = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:5000/api/menus");
+      const res = await axios.get("${API_URL}/api/menus");
       setMenus(res.data);
     } catch (error) { console.error(error); }
   };
@@ -50,14 +51,14 @@ export default function AdminMenu() {
 
     try {
       if (isEditing) {
-        await axios.put(`http://127.0.0.1:5000/api/menus/${editId}`, dataKirim, {
+        await axios.put(`${API_URL}/api/menus/${editId}`, dataKirim, {
           headers: { "Content-Type": "multipart/form-data" }
         });
         alert("Menu kopi berhasil diperbarui!");
         setIsEditing(false);
         setEditId(null);
       } else {
-        await axios.post("http://127.0.0.1:5000/api/menus", dataKirim, {
+        await axios.post("${API_URL}/api/menus", dataKirim, {
           headers: { "Content-Type": "multipart/form-data" }
         });
         alert("Menu kopi baru berhasil ditambahkan!");
@@ -93,7 +94,7 @@ export default function AdminMenu() {
 
   const handleSelesaiOrder = async (id) => {
     try {
-      await axios.put(`http://127.0.0.1:5000/api/orders/${id}`, { status: "Selesai" });
+      await axios.put(`${API_URL}/api/orders/${id}`, { status: "Selesai" });
       fetchOrders(); 
     } catch (error) { console.error(error); }
   };
@@ -101,7 +102,7 @@ export default function AdminMenu() {
   const handleDeleteMenu = async (id) => {
     if(window.confirm("Yakin ingin menghapus menu ini dari Kasir?")) {
       try {
-        await axios.delete(`http://127.0.0.1:5000/api/menus/${id}`);
+        await axios.delete(`${API_URL}/api/menus/${id}`);
         fetchMenus(); 
       } catch (error) { alert("Gagal menghapus menu."); }
     }

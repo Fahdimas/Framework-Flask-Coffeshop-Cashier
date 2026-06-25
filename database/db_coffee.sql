@@ -16,8 +16,7 @@
 
 
 -- Dumping database structure for db_coffee
-CREATE DATABASE IF NOT EXISTS `db_coffee` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `db_coffee`;
+
 
 -- Dumping structure for table db_coffee.menus
 CREATE TABLE IF NOT EXISTS `menus` (

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import API_URL from '../api'; 
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ export default function Login() {
     e.preventDefault();
     try {
       // Pastikan backend kamu menggunakan PORT yang benar (5000)
-      const response = await axios.post("http://127.0.0.1:5000/api/login", {
+      const response = await axios.post(`${API_URL}/api/login`, {
         email,
         password,
       });

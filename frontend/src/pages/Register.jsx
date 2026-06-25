@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import API_URL from '../api'; 
 
 export default function Register() {
   const [nama, setNama] = useState("");
@@ -12,7 +13,7 @@ export default function Register() {
     e.preventDefault();
     try {
       // Gunakan 127.0.0.1 agar lebih stabil dibanding localhost
-      await axios.post("http://127.0.0.1:5000/api/register", {
+      await axios.post(`${API_URL}/api/register`, {
         nama,
         email,
         password,

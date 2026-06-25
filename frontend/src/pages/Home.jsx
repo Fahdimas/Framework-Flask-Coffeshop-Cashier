@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import API_URL from '../api';
 
 export default function Home() {
   const [menus, setMenus] = useState([]);
@@ -13,7 +14,7 @@ export default function Home() {
   useEffect(() => {
     const fetchMenus = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/api/menus");
+        const response = await axios.get(`${API_URL}/api/menus`);
         setMenus(response.data);
       } catch (error) {
         console.error("Gagal mengambil data menu:", error);
