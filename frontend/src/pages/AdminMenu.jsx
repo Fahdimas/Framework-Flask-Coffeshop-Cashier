@@ -13,18 +13,18 @@ export default function AdminMenu() {
   const [formData, setFormData] = useState({
     nama_kopi: "", deskripsi: "", harga: ""
   });
-  const [fileGambar, setFileGambar] = useState(null); // Menyimpan file upload
+  const [fileGambar, setFileGambar] = useState(null);
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("${API_URL}/api/orders");
+      const res = await axios.get(`${API_URL}/api/orders`);
       setOrders(res.data);
     } catch (error) { console.error(error); }
   };
 
   const fetchMenus = async () => {
     try {
-      const res = await axios.get("${API_URL}/api/menus");
+      const res = await axios.get(`${API_URL}/api/menus`);
       setMenus(res.data);
     } catch (error) { console.error(error); }
   };
@@ -40,7 +40,6 @@ export default function AdminMenu() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Karena kita mengirim File, kita wajib menggunakan FormData, bukan JSON biasa
     const dataKirim = new FormData();
     dataKirim.append("nama_kopi", formData.nama_kopi);
     dataKirim.append("deskripsi", formData.deskripsi);
@@ -58,15 +57,14 @@ export default function AdminMenu() {
         setIsEditing(false);
         setEditId(null);
       } else {
-        await axios.post("${API_URL}/api/menus", dataKirim, {
+        await axios.post(`${API_URL}/api/menus`, dataKirim, {
           headers: { "Content-Type": "multipart/form-data" }
         });
         alert("Menu kopi baru berhasil ditambahkan!");
       }
-      // Reset form
       setFormData({ nama_kopi: "", deskripsi: "", harga: "" });
       setFileGambar(null);
-      document.getElementById('inputGambar').value = ""; // Reset input file
+      document.getElementById('inputGambar').value = "";
       fetchMenus(); 
     } catch (error) {
       alert("Gagal memproses menu.");
@@ -82,7 +80,7 @@ export default function AdminMenu() {
       deskripsi: menu.deskripsi,
       harga: menu.harga
     });
-    setFileGambar(null); // File gambar harus diupload ulang jika ingin diganti
+    setFileGambar(null);
   };
 
   const handleBatalEdit = () => {
@@ -121,7 +119,6 @@ export default function AdminMenu() {
           
           <div style={{ flex: "1", minWidth: "350px", display: "flex", flexDirection: "column", gap: "25px" }}>
             
-            {/* FORM TAMBAH/EDIT DENGAN UPLOAD FILE */}
             <div style={{ backgroundColor: "#FFFFFF", padding: "30px", borderRadius: "16px", boxShadow: "0 10px 30px rgba(62, 39, 35, 0.08)" }}>
               <h2 style={{ color: "#4E342E", marginBottom: "20px", borderBottom: "2px solid #EFEBE9", paddingBottom: "10px" }}>
                 {isEditing ? "📝 Edit Menu Kopi" : "Tambah Menu Baru"}
@@ -131,7 +128,6 @@ export default function AdminMenu() {
                 <input type="text" name="deskripsi" placeholder="Deskripsi Singkat" value={formData.deskripsi} onChange={handleChange} required style={{ padding: "12px", borderRadius: "8px", border: "1px solid #D7CCC8", backgroundColor: "#FAFAFA" }} />
                 <input type="number" name="harga" placeholder="Harga Jual (Rp)" value={formData.harga} onChange={handleChange} required style={{ padding: "12px", borderRadius: "8px", border: "1px solid #D7CCC8", backgroundColor: "#FAFAFA" }} />
                 
-                {/* INPUT UPLOAD GAMBAR */}
                 <div>
                   <label style={{ fontSize: "14px", color: "#8D6E63", display: "block", marginBottom: "5px" }}>Upload Gambar Kopi:</label>
                   <input id="inputGambar" type="file" accept="image/*" onChange={handleFileChange} style={{ padding: "10px", borderRadius: "8px", border: "1px dashed #D7CCC8", width: "100%", backgroundColor: "#FAFAFA", cursor: "pointer" }} />
@@ -139,7 +135,7 @@ export default function AdminMenu() {
                 </div>
                 
                 <button type="submit" style={{ backgroundColor: isEditing ? "#10B981" : "#5D4037", color: "white", padding: "15px", border: "none", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", marginTop: "5px" }}>
-                  {isEditing ? "Simpan Perubahan harga" : "Simpan Menu"}
+                  {isEditing ? "Simpan Perubahan" : "Simpan Menu"}
                 </button>
                 
                 {isEditing && (
@@ -158,7 +154,6 @@ export default function AdminMenu() {
                 menus.map(menu => (
                   <div key={menu.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #EFEBE9", paddingBottom: "10px", marginBottom: "10px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-                      {/* Tampilkan Thumbnail Gambar di Daftar Menu */}
                       <img src={menu.gambar || "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=100&q=80"} alt="kopi" style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "5px" }} />
                       <div>
                         <strong style={{ color: "#3E2723" }}>{menu.nama_kopi}</strong><br/>
